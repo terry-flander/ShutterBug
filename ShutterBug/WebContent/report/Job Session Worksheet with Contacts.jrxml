@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Job Session Worksheet" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="JobCardCode" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT se.Name,se.Code,se.Description,se.StartTime,su.SubjectCode,su.FirstShot,su.LastShot, su.Note, Status,
+concat(concat(S.LastName,', '),S.FirstName) as FullName,
+concat(concat(P.LastName,', '),P.FirstName) as PHOTOGRAPHER_NAME,
+concat(concat(C.FirstName,' '),C.LastName) AS CONTACT_NAME, C.Mobile AS CONTACT_NUMBER
+from Session se, Subject su
+INNER JOIN NameCard S ON su.NameCardID = S.NameCardID
+LEFT OUTER JOIN NameCard P ON su.PhotographerID = P.NameCardID
+LEFT OUTER JOIN NameRelation NR ON NR.ParentType = 3 AND NR.ParentID = su.SubjectID AND NR.RelationType = 'Contact'
+LEFT OUTER JOIN NameCard C ON NR.ChildID = C.NameCardID
+where se.JobCardID = (SELECT JobCardID FROM JobCard WHERE Code = $P{JobCardCode})
+  and se.SessionID = su.SessionID
+order by se.code, FullName]]>
+	</queryString>
+	<field name="Name" class="java.lang.String"/>
+	<field name="Code" class="java.lang.String"/>
+	<field name="Description" class="java.lang.String"/>
+	<field name="StartTime" class="java.sql.Time"/>
+	<field name="SubjectCode" class="java.lang.String"/>
+	<field name="FirstShot" class="java.lang.Integer"/>
+	<field name="LastShot" class="java.lang.Integer"/>
+	<field name="Note" class="java.lang.String"/>
+	<field name="Status" class="java.lang.String"/>
+	<field name="FullName" class="java.lang.String"/>
+	<field name="PHOTOGRAPHER_NAME" class="java.lang.String"/>
+	<field name="CONTACT_NAME" class="java.lang.String"/>
+	<field name="CONTACT_NUMBER" class="java.lang.String"/>
+	<variable name="ContactName" class="java.lang.String">
+		<variableExpression><![CDATA[($F{CONTACT_NAME}!=null?$F{CONTACT_NAME}:"")]]></variableExpression>
+	</variable>
+	<variable name="ContactNumber" class="java.lang.String">
+		<variableExpression><![CDATA[($F{CONTACT_NUMBER}!=null?$F{CONTACT_NUMBER}:"")]]></variableExpression>
+	</variable>
+	<variable name="FirstShot" class="java.lang.String">
+		<variableExpression><![CDATA[($F{FirstShot}!=0?$F{FirstShot}:"")]]></variableExpression>
+	</variable>
+	<variable name="LastShot" class="java.lang.String">
+		<variableExpression><![CDATA[($F{LastShot}!=0?$F{LastShot}:"")]]></variableExpression>
+	</variable>
+	<variable name="Photographer" class="java.lang.String">
+		<variableExpression><![CDATA[($F{PHOTOGRAPHER_NAME}!=null?$F{PHOTOGRAPHER_NAME}:"")]]></variableExpression>
+	</variable>
+	<variable name="Note" class="java.lang.String">
+		<variableExpression><![CDATA[($F{Note}!=null?$F{Note}:"")]]></variableExpression>
+	</variable>
+	<variable name="Status" class="java.lang.String">
+		<variableExpression><![CDATA[($F{Status}!=null?$F{Status}:"")]]></variableExpression>
+	</variable>
+	<group name="Group1" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{Code}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<textField>
+					<reportElement x="40" y="5" width="185" height="15"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="40" y="20" width="44" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{Code}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="301" y="5" width="239" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{Description}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="301" y="20" width="100" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{StartTime}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="5" width="33" height="20"/>
+					<textElement/>
+					<text><![CDATA[Class]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="20" width="33" height="20"/>
+					<textElement/>
+					<text><![CDATA[Code]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="237" y="5" width="64" height="20"/>
+					<textElement/>
+					<text><![CDATA[Description]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="237" y="20" width="50" height="20"/>
+					<textElement/>
+					<text><![CDATA[StartTime]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="70" splitType="Stretch">
+			<image>
+				<reportElement x="5" y="6" width="336" height="64"/>
+				<imageExpression><![CDATA["../images/FundFotoLogo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="SubTitle" x="476" y="26" width="200" height="22"/>
+				<textElement/>
+				<text><![CDATA[Job/Session Worksheet]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="36" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="13" width="40" height="20"/>
+				<textElement/>
+				<text><![CDATA[Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="13" width="79" height="20"/>
+				<textElement/>
+				<text><![CDATA[Student Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="192" y="13" width="46" height="20"/>
+				<textElement/>
+				<text><![CDATA[FirstShot]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="313" y="13" width="66" height="20"/>
+				<textElement/>
+				<text><![CDATA[Photographer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="13" width="43" height="20"/>
+				<textElement/>
+				<text><![CDATA[LastShot]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="13" width="31" height="20"/>
+				<textElement/>
+				<text><![CDATA[Notes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="526" y="16" width="74" height="20"/>
+				<textElement/>
+				<text><![CDATA[Contact Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="638" y="16" width="32" height="20"/>
+				<textElement/>
+				<text><![CDATA[Phone]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="35" width="802" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="752" y="16" width="43" height="15"/>
+				<textElement/>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="16" width="802" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="0" y="0" width="40" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SubjectCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="0" width="133" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{FullName}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="192" y="0" width="46" height="15"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="245" y="0" width="60" height="15"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="313" y="0" width="94" height="15"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="414" y="0" width="101" height="15"/>
+			</rectangle>
+			<textField>
+				<reportElement x="526" y="0" width="100" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{ContactName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="638" y="0" width="100" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{ContactNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="196" y="0" width="41" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{FirstShot}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="249" y="0" width="50" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{LastShot}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="317" y="0" width="94" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{Photographer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="418" y="0" width="100" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{Note}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="752" y="1" width="50" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{Status}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="Column header" x="676" y="0" width="80" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="Column header" x="759" y="0" width="40" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="0" y="0" width="197" height="20"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

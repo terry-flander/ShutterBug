@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OrderWorksheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FirstOrderNumber" class="java.lang.String">
+		<defaultValueExpression><![CDATA[OR000001]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LastOrderNumber" class="java.lang.String">
+		<defaultValueExpression><![CDATA[OR000001]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OrderStatus" class="java.lang.String">
+		<defaultValueExpression><![CDATA[New]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT O.OrderNumber, O.OrderDate, O.OrderStatus,
+  Address, concat(concat(concat(City, ' '),State, ' '),PostCode) AS FullAddress,
+     Phone, eMail, Mobile,
+     concat(concat(FirstName,' '),LastName) AS BILL_TO, PC.ProductDescription,
+S.ShotName,OP.Size,
+IF (OP.Color = 'B','B&W','Color') AS COLOR
+,OP.FrameOrder,OP.Quantity AS PHOTO_QTY,OL.Quantity, OL.Price, OL.ExtendedPrice, OL.OptionList, O.TotalPrice
+FROM OrderCard O
+INNER JOIN NameCard N ON N.NameCardID = O.NameCardID
+INNER JOIN OrderLine OL ON O.OrderID = OL.OrderID
+INNER JOIN ProductCard PC ON OL.ProductID = PC.ProductID
+LEFT OUTER JOIN OrderPhoto OP ON OP.OrderLineID = OL.OrderLineID
+LEFT OUTER JOIN Shot S ON S.ShotID = OP.ShotID
+WHERE O.OrderNumber BETWEEN $P{FirstOrderNumber} AND $P{LastOrderNumber}
+and (UPPER(O.OrderStatus)=UPPER($P{OrderStatus}) OR $P{OrderStatus}='')
+order by O.OrderNumber, OL.OrderLineID, OP.FrameOrder]]>
+	</queryString>
+	<field name="OrderNumber" class="java.lang.String"/>
+	<field name="OrderDate" class="java.sql.Timestamp"/>
+	<field name="OrderStatus" class="java.lang.String"/>
+	<field name="Address" class="java.lang.String"/>
+	<field name="FullAddress" class="java.lang.String"/>
+	<field name="Phone" class="java.lang.String"/>
+	<field name="eMail" class="java.lang.String"/>
+	<field name="Mobile" class="java.lang.String"/>
+	<field name="BILL_TO" class="java.lang.String"/>
+	<field name="ProductDescription" class="java.lang.String"/>
+	<field name="ShotName" class="java.lang.String"/>
+	<field name="Size" class="java.lang.String"/>
+	<field name="COLOR" class="java.lang.String"/>
+	<field name="FrameOrder" class="java.lang.Integer"/>
+	<field name="PHOTO_QTY" class="java.lang.Integer"/>
+	<field name="Quantity" class="java.lang.Integer"/>
+	<field name="Price" class="java.math.BigDecimal"/>
+	<field name="ExtendedPrice" class="java.math.BigDecimal"/>
+	<field name="OptionList" class="java.lang.String"/>
+	<field name="TotalPrice" class="java.math.BigDecimal"/>
+	<variable name="OrderNumber_1" class="java.lang.Integer" resetType="Page" calculation="Count">
+		<variableExpression><![CDATA[$F{OrderNumber}]]></variableExpression>
+	</variable>
+	<variable name="Order Total" class="java.lang.String" calculation="Sum">
+		<variableExpression><![CDATA[$F{ExtendedPrice}]]></variableExpression>
+	</variable>
+	<variable name="LineCount" class="java.lang.Integer" resetType="Group" resetGroup="Order Number" calculation="Count">
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<variable name="Moulding" class="java.lang.String" resetType="None" calculation="System">
+		<variableExpression><![CDATA[($F{OptionList}.indexOf("mould_:")>-1?$F{OptionList}.substring($F{OptionList}.indexOf("mould_:")+7,$F{OptionList}.indexOf(";")).toUpperCase():"-")]]></variableExpression>
+	</variable>
+	<variable name="Mount" class="java.lang.String" resetType="None" calculation="System">
+		<variableExpression><![CDATA[($F{OptionList}.indexOf("mount_:")>0?$F{OptionList}.substring($F{OptionList}.indexOf("mount_:")+7).toUpperCase():"-")]]></variableExpression>
+	</variable>
+	<group name="Order Number" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{OrderNumber}]]></groupExpression>
+		<groupHeader>
+			<band height="200">
+				<rectangle radius="10">
+					<reportElement x="0" y="93" width="555" height="88"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="31" y="138" width="53" height="20"/>
+					<textElement>
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Address:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="89" y="139" width="100" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{Address}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="31" y="158" width="53" height="20"/>
+					<textElement>
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Suburb:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="89" y="159" width="151" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{FullAddress}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="266" y="139" width="53" height="20"/>
+					<textElement/>
+					<text><![CDATA[Mobile:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="324" y="139" width="151" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{Mobile}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="266" y="159" width="53" height="20"/>
+					<textElement/>
+					<text><![CDATA[Phone:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="324" y="159" width="151" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{Phone}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="31" y="118" width="53" height="20"/>
+					<textElement>
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Name:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="89" y="118" width="151" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{BILL_TO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="266" y="119" width="53" height="20"/>
+					<textElement/>
+					<text><![CDATA[eMail:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="324" y="119" width="151" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{eMail}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="20" y="97" width="472" height="20"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Contact Information:]]></text>
+				</staticText>
+				<rectangle radius="10">
+					<reportElement x="370" y="4" width="184" height="82"/>
+				</rectangle>
+				<rectangle radius="10">
+					<reportElement x="0" y="4" width="311" height="82"/>
+				</rectangle>
+				<textField evaluationTime="Page">
+					<reportElement x="441" y="20" width="100" height="20"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{OrderNumber}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="386" y="20" width="43" height="20"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Order #:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="386" y="41" width="43" height="20"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Date:]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="441" y="41" width="100" height="20"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{OrderDate}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="14" y="41" width="202" height="20"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Address}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="14" y="20" width="202" height="20"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{BILL_TO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="14" y="62" width="202" height="20"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{FullAddress}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="27" y="185" width="100" height="15"/>
+					<textElement/>
+					<text><![CDATA[Product Description]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="321" y="185" width="50" height="15"/>
+					<textElement/>
+					<text><![CDATA[Quantity]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="386" y="185" width="55" height="15"/>
+					<textElement textAlignment="Right"/>
+					<text><![CDATA[Unit Price]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="449" y="185" width="100" height="15"/>
+					<textElement textAlignment="Right"/>
+					<text><![CDATA[Extended Price]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="185" width="10" height="15"/>
+					<textElement/>
+					<text><![CDATA[#]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="227" y="185" width="46" height="15"/>
+					<textElement/>
+					<text><![CDATA[Moulding]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="280" y="185" width="35" height="15"/>
+					<textElement/>
+					<text><![CDATA[Mount]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="19">
+				<staticText>
+					<reportElement x="382" y="4" width="62" height="15"/>
+					<textElement/>
+					<text><![CDATA[Order Total]]></text>
+				</staticText>
+				<line>
+					<reportElement x="2" y="1" width="550" height="1"/>
+				</line>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="449" y="4" width="100" height="15"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{TotalPrice}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="OrderLine">
+		<groupExpression><![CDATA[$F{ProductDescription}]]></groupExpression>
+		<groupHeader>
+			<band height="35">
+				<line>
+					<reportElement x="2" y="1" width="550" height="1"/>
+				</line>
+				<textField>
+					<reportElement x="27" y="4" width="189" height="15"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{ProductDescription}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="321" y="4" width="50" height="15"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{Quantity}]]></textFieldExpression>
+				</textField>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="386" y="4" width="58" height="15"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{Price}]]></textFieldExpression>
+				</textField>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="449" y="4" width="100" height="15"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{ExtendedPrice}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="40" y="19" width="45" height="15"/>
+					<textElement/>
+					<text><![CDATA[Position]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="92" y="20" width="70" height="15"/>
+					<textElement/>
+					<text><![CDATA[Shot Name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="211" y="19" width="70" height="15"/>
+					<textElement/>
+					<text><![CDATA[Size]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="327" y="19" width="70" height="15"/>
+					<textElement/>
+					<text><![CDATA[Color/B&W]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="418" y="19" width="70" height="15"/>
+					<textElement/>
+					<text><![CDATA[Quantity]]></text>
+				</staticText>
+				<textField evaluationTime="Band">
+					<reportElement x="4" y="5" width="15" height="15"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{Order Number_COUNT} + 1]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="233" y="4" width="37" height="15"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[($V{Moulding}.length()>0?$V{Moulding}:"-")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="286" y="4" width="25" height="15"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[($V{Mount}.length()>0?$V{Mount}:"-")]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="145" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="194" height="45"/>
+				<imageExpression><![CDATA["/Users/terryflander/Documents/workspace/ShutterBug/WebContent/images/FundFotoLogo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="70" width="100" height="15"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[P O Box 7144]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="85" width="100" height="15"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[BRIGHTON VIC 3186]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="100" height="15"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Ph: (03) 9598 6811]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="127" width="100" height="15"/>
+				<textElement/>
+				<text><![CDATA[A.B.N. 84 119 785 821]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="363" y="70" width="178" height="27"/>
+				<textElement>
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order Worksheet]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="92" y="0" width="106" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ShotName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="418" y="0" width="60" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PHOTO_QTY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="0" width="49" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{COLOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="44" y="0" width="41" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{FrameOrder}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="212" y="0" width="107" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Size}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="16" splitType="Stretch">
+			<staticText>
+				<reportElement x="89" y="2" width="403" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[www.fundfoto.com.au -- email us at info@fundfoto.com.au or phone: 9598 6811]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

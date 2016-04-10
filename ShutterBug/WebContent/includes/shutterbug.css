@@ -1,0 +1,143 @@
+body {
+  font-family:Arial;  
+  font-size:9pt;
+  }
+tr {
+  font-family:Arial;  
+  font-size:9pt;
+	}
+tr.oddRow {
+  background-color:#C1DEC5;
+}
+tr.evenRow {
+  background-color:#C1C2DE;
+}	
+td.inputField {
+  font-family:Arial;
+}
+td.inputLabel {
+  font-family:Arial;
+  font-size:9pt;
+  font-style:italic;
+  font-weight:bold;
+  text-align:right;
+}
+th {
+  font-family:Arial;
+  font-size:9pt;
+  font-style:italic;
+  font-weight:bold;
+}
+.messageBox {
+  position:relative; 
+  font-family:arial; 
+  font-size:12; 
+  font-style:italic; 
+  color:red; 
+  text-align:center;
+}
+.hiddenFrame {
+	visibility:hidden;
+	position:relative;
+	left:-20000px;
+	display:none;
+	width:1px;
+	height:1px;
+}
+.menuHeader {
+  font-family:Arial;
+  font-size:12pt; 
+  color:white; 
+  background-color:#212121;
+  margin:1px; 
+  width:100%;
+  height:5%; 
+}
+
+.menuBox {
+	width:100%;
+	height:40px;
+	margin:0px;
+	padding:0px;
+  border-collapse:collapse;
+}
+
+td.menuChoice {
+  text-align: center;
+  width: 100px;
+  height: 35px;
+  color:black; 
+  font-size: 10pt;
+  font-weight: bold;
+  background-color:#8f8f8f;
+  border:1pt solid black;
+  -webkit-border-top-left-radius: 12px;
+	-webkit-border-top-right-radius: 12px;
+	-moz-border-radius-topleft: 12px;
+	-moz-border-radius-topright: 12px;
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;  
+}
+
+td.menuChoice:hover {background-color:#C1DEC5; cursor:pointer;}
+
+a.menuLink:link {text-decoration: none; color:black;}
+a.menuLink:visited {font-size:10pt; color:black; text-decoration: none;}
+a.menuLink:active {font-size:10pt; color:black; text-decoration: none;}
+a.menuLink:hover {font-size:10pt; color:black; text-decoration: none; font-weight:bold;}
+
+.actionBox {
+  width:100%;
+  height:88%;
+  margin:0px;
+  padding:0px;
+  background-color:white;
+}
+.actionFrame {
+  width:100%;
+  height:100%; 
+  border:none;
+  margin: 0px;
+  padding: 0px;
+  border:0px;
+}
+caption {
+	caption-side:bottom;
+	text-align: right;
+	font-size:7pt;
+	font-style:italic;
+	font-weight:bold;
+}
+
+legend {
+	font-size:11pt;
+	font-weight:bold;
+}
+
+fieldset {
+	background-color:white;
+  -moz-border-radius: 8px; 
+  -webkit-border-radius: 8px; 
+  border-radius: 8px; 
+}
+
+td.qtyTotal {
+	text-align:right;
+	border:solid black 1px;
+	width:100px;
+}
+
+td.priceTotal {
+	text-align:right;
+  border:solid black 1px;
+  width:100px;
+}
+
+table.productDetail {
+	border:solid black 1px;
+}
+
+tr.productRow {
+	border-bottom:solid black 1px;
+}
+
